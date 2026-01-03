@@ -31,13 +31,16 @@ function [Best_score,Best_pos,HO_curve]=HO(SearchAgents,Max_iterations,lowerboun
             Xbest=X(location,:);
         end
 
-        for i=1:SearchAgents/2
+        % DÜZELTME: floor() kullanarak tam sayı bölme
+        halfAgents = floor(SearchAgents/2);
+
+        for i=1:halfAgents
             %% Phase1: The hippopotamuses position update in the river or pond (Exploration)
             Dominant_hippopotamus=Xbest;
             I1=randi([1,2],1,1);
             I2=randi([1,2],1,1);
             Ip1=randi([0,1],1,2);
-            RandGroupNumber=randperm(SearchAgents,1);
+            RandGroupNumber=randi([2, SearchAgents],1,1);  % Minimum 2 olsun
             RandGroup=randperm(SearchAgents,RandGroupNumber);
 
             % Mean of Random Group (Octave Compatible Fix)
@@ -67,7 +70,7 @@ function [Best_score,Best_pos,HO_curve]=HO(SearchAgents,Max_iterations,lowerboun
                 if rand() > 0.5
                     X_P2(i,:) = X(i,:) + B.*(MeanGroup - Dominant_hippopotamus);
                 else
-                    X_P2(i,:) = ((upperbound-lowerbound)*rand + lowerbound);
+                    X_P2(i,:) = ((upperbound-lowerbound).*rand(1,dimension) + lowerbound);
                 end
             end
 
@@ -89,19 +92,18 @@ function [Best_score,Best_pos,HO_curve]=HO(SearchAgents,Max_iterations,lowerboun
         end
 
         %% Phase 2: Hippopotamus defense against predators (Exploration)
-        for i = 1+SearchAgents/2 : SearchAgents
+        for i = (halfAgents+1):SearchAgents
             predator = lowerbound + rand(1,dimension).*(upperbound - lowerbound);
             L = predator;
             F_HL = fitness(L);
 
             distance2Leader = abs(predator - X(i,:));
 
-            % Replaced unifrnd with standard rand to avoid 'pkg load statistics' errors
-            % unifrnd(a, b) equivalent is a + (b-a)*rand
-            b = 2 + (4-2)*rand();       % unifrnd(2,4)
-            c = 1 + (1.5-1)*rand();     % unifrnd(1,1.5)
-            d = 2 + (3-2)*rand();       % unifrnd(2,3)
-            l = -2*pi + (2*pi - (-2*pi))*rand(); % unifrnd(-2*pi, 2*pi)
+            % Octave uyumlu uniform dağılım
+            b = 2 + (4-2)*rand();
+            c = 1 + (1.5-1)*rand();
+            d = 2 + (3-2)*rand();
+            l = -2*pi + (2*pi - (-2*pi))*rand();
 
             % NOTE: Ensure 'levy.m' function exists in your folder!
             RL = 0.05 * levy(SearchAgents, dimension, 1.5);
@@ -147,7 +149,9 @@ function [Best_score,Best_pos,HO_curve]=HO(SearchAgents,Max_iterations,lowerboun
         end
 
         best_so_far(t) = fbest;
-        disp(['Iteration ' num2str(t) ': Best Cost = ' num2str(best_so_far(t))]);
+        if mod(t, 50) == 0  % Her 50 iterasyonda bir göster
+            disp(['Iteration ' num2str(t) ': Best Cost = ' num2str(best_so_far(t))]);
+        end
 
         Best_score = fbest;
         Best_pos = Xbest;
