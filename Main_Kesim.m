@@ -108,7 +108,7 @@ set(gca, 'XTick', xticks);
 legend('İyileşme Eğrisi', ...
        sprintf('En İyi Değer: %.3f (Iter. %d)', best_value, best_idx), ...
        sprintf('Başlangıç: %.3f', HO_curve(1)), ...
-       'Location', 'best', 'FontSize', 11);
+       'Location', 'northeast', 'FontSize', 11);
 
 % 11. Grafik kutusu
 box on;
@@ -132,3 +132,4 @@ text(0.02, 0.98, stats_text, 'Units', 'normalized', ...
      'EdgeColor', 'k', 'Margin', 5);
 
 hold off;
+
