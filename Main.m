@@ -19,9 +19,10 @@ fprintf('       HIPPOPOTAMUS ALGORITHM\n');
 fprintf('===========================================\n');
 
 % --- 2. TARGET (FFD) CALCULATION ---
+% if our system find this target, it wont continue the loop
 [pieces_ffd, ~] = sort(PieceDemands, 'descend');
 [stock_ffd, fullness_ffd] = FirstFit(pieces_ffd, StockLength);
-baseline_cost = stock_ffd * 1000 + (stock_ffd*StockLength - sum(fullness_ffd));
+baseline_cost = stock_ffd * 1000 + (stock_ffd*StockLength - sum(fullness_ffd)); % using new stock has a bigger punishment
 fprintf('TARGET: %d Stocks (Cost: %.0f)\n\n', stock_ffd, baseline_cost);
 
 % --- 3. INTELLIGENT ALGORITHM LOOP ---
@@ -33,7 +34,7 @@ fitness_func = @(x) CuttingCost(x, PieceDemands, StockLength);
 t_start = tic;
 
 for run = 1:RunCount
-    fprintf('>> Trial %d...', run);
+    fprintf('>> Trial %d...\n', run);
 
     % Randomness changes each run
     rand('state', sum(100*clock) + run);

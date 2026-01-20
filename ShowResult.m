@@ -1,5 +1,5 @@
 function ShowResult(Best_pos, Best_score, HO_curve, PieceDemands, StockLength)
-    % --- RESULT VISUALIZATION FUNCTION (FIXED & IMPROVED) ---
+    % --- RESULT VISUALIZATION FUNCTION ---
 
     % 1. DECODE THE BEST ORDERING
     [~, OrderIndex] = sort(Best_pos);
@@ -61,7 +61,7 @@ function ShowResult(Best_pos, Best_score, HO_curve, PieceDemands, StockLength)
     figure('Name', 'Cutting Plan and Waste', 'Color', 'w', 'Position', [100, 100, 1200, 700]); % Height increased
     hold on;
 
-    % Title Updated
+    % Title
     title(sprintf('Cutting Plan - %d Stocks, %.1f%% Efficiency', ...
         CurrentStock, ((CurrentStock*StockLength - TotalWaste)/(CurrentStock*StockLength))*100), ...
         'FontSize', 12, 'FontWeight', 'bold');
@@ -77,7 +77,6 @@ function ShowResult(Best_pos, Best_score, HO_curve, PieceDemands, StockLength)
         stockWidth = 0.6;
     end
 
-    % Fix Y-Axis Limits (Add 15% headroom for top labels)
     ylim([0, StockLength * 1.15]);
 
     ColorFull = [0.2, 0.6, 0.8];
@@ -129,8 +128,6 @@ function ShowResult(Best_pos, Best_score, HO_curve, PieceDemands, StockLength)
              'HorizontalAlignment', 'center', 'FontSize', 8, 'FontWeight', 'bold', 'BackgroundColor', 'w');
     end
 
-    % --- FIX: PROPER X-AXIS LABELS ---
-    % Remove default ticks and set custom labels properly
     xticks(1:showStocks);
     xticklabels(xLabels);
     xtickangle(45); % Rotate 45 degrees to prevent overlap
@@ -141,8 +138,6 @@ function ShowResult(Best_pos, Best_score, HO_curve, PieceDemands, StockLength)
             'HorizontalAlignment', 'center', 'FontSize', 10, 'Color', 'red');
     end
 
-    % --- FIX: LEGEND POSITION ---
-    % Moved to 'southoutside' (bottom) to avoid overlap with title
     h1 = plot(nan, nan, 's', 'MarkerSize', 10, ...
         'MarkerFaceColor', ColorFull, 'MarkerEdgeColor', 'k');
     h2 = plot(nan, nan, 's', 'MarkerSize', 10, ...

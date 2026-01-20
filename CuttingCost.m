@@ -1,5 +1,4 @@
 function [cost] = CuttingCost(x, PieceDemands, StockLength)
-    % REMOVED data generation section.
     % x: Ordering keys produced by algorithm
     % PieceDemands: Fixed data from Main
 
